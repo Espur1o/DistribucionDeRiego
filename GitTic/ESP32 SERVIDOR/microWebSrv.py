@@ -134,26 +134,6 @@ class MicroWebSrv :
                     pass
         return False
 
-    # ----------------------------------------------------------------------------
-
-    #@staticmethod
-    #def _unquote(s) :
-    #    r = s.split('%')
-    #    for i in range(1, len(r)) :
-    #        s = r[i]
-    #        try :
-    #            r[i] = chr(int(s[:2], 16)) + s[2:]
-    #        except :
-    #            r[i] = '%' + s
-    #    return ''.join(r)
-
-    # ------------------------------------------------------------------------------
-
-    #@staticmethod
-    #def _unquote_plus(s) :
-    #    return MicroWebSrv._unquote(s.replace('+', ' '))
-
-    # ------------------------------------------------------------------------------
 
     @staticmethod
     def _unquote_decode(data:str) :
@@ -198,7 +178,7 @@ class MicroWebSrv :
                   routeHandlers = [],
                   port          = 80,
                   bindIP        = '0.0.0.0',
-                  webPath       = "/flash/www" ) :
+                  webPath       = "" ) :
 
         self._srvAddr       = (bindIP, port)
         self._webPath       = webPath

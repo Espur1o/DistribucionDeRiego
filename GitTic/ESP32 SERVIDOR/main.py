@@ -6,93 +6,146 @@ from microWebSrv import MicroWebSrv
 #	AQUI DEBE IR UN HTML DEL SERVIOR!!!! CON 3 GRAFICOS, LOS DATOS DEBEN SALIR DE UN ARCHIVO SCV, INCORPORAR LA SOLUCION DE GRAFICAR
 # 	DESDE CSV..... SE PUEDE UTILIZAR JAVASCRIPT.
 
-@MicroWebSrv.route('/test')
-def _httpHandlerTestGet(httpClient, httpResponse) :
-	content = """\
+
+@MicroWebSrv.route('/INDEX')
+def _httpHandlerTestGet(httpClient, httpResponse):
+	print(httpClient)
+	programa="PROGRAMA 20 MIN TOTALES POR NODO 40 MIN TOTAL"
+	content= """\
 	<!DOCTYPE html>
-	<html lang=en>
-        <head>
-			<link rel="stylesheet" href="style.css">
-        	<meta charset="UTF-8" />
-            <title>Proyecto TIC'S 2018 SEGUNDO SEMESTRE</title>
-        </head>
-        <body>
-            <h2>PAGINA WEBA</h2>
-			<div id="navbar">
-				<a href="#SERVIDOR">SERVIDOR</a>
-				<a href="#NODO A">NODO A</a>
-				<a href="#NODO B">NODO B</a>
+	<html>
+		<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style2.css">
+		</head>
+		<body>
+			<div class="sidenav">
+				<a href="http://192.168.43.111/INDEX">PROGRAMAS</a>
+				<a href="http://192.168.43.111/NODO%20A">NODO A</a>
+				<a href="http://192.168.43.111/NODO%20B">NODO B</a>
+  				<a href="http://192.168.43.111/CONTACTO">Contacto</a>
 			</div>
-            DIRECCION IP DEL CLIENTE = %s
-            <br />
-			<form action="/test" method="post" accept-charset="ISO-8859-1">
-				First name: <input type="text" name="firstname"><br />
-				Last name: <input type="text" name="lastname"><br />
-				<input type="submit" value="Submit">
-			</form>
-        </body>
-    </html>
-	""" % httpClient.GetIPAddr()
+			<div class="main">
+				<h2>CONFIGURACION DE PROGRAMAS DE RIEGO</h2>
+				<p>PROGRAMA ACTUAL DE RIEGO: </p>
+  				<p>data</p>
+				<form action="/INDEX" method="post" accept-charset="ISO-8859-1">
+					SENSOR A: <input type="text" name="FLUJO"><br />
+					SENSOR B: <input type="text" name="CORRIENTE"><br />
+					<input type="submit" value="Submit">
+				</form>	
+			</div>    
+
+		</body>
+	</html>
+	"""
 	httpResponse.WriteResponseOk( headers		 = None,
 								  contentType	 = "text/html",
 								  contentCharset = "UTF-8",
 								  content 		 = content )
 
-@MicroWebSrv.route('/NODOB')
-def _httpHandlerTestGet(httpClient, httpResponse) :
-	content = """\
+@MicroWebSrv.route('/NODO A')
+def _httpHandlerTestGet2(httpClient, httpResponse):
+	print(httpClient)
+	content= """\
 	<!DOCTYPE html>
-	<html lang=en>
-        <head>
-			<link rel="stylesheet" href="style.css">
-        	<meta charset="UTF-8" />
-            <title>Proyecto TIC'S 2018 SEGUNDO SEMESTRE</title>
-        </head>
-        <body>
-            <h2>MODULO NODO B</h2>
-			<div id="navbar">
-				<a href="#SERVIDOR">SERVIDOR</a>
-				<a href="#NODO A">NODO A</a>
-				<a href="#NODO B">NODO B</a>
+	<html>
+		<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style2.css">
+		</head>
+		<body>
+			<div class="sidenav">
+				<a href="http://192.168.43.111/INDEX">PROGRAMAS</a>
+				<a href="http://192.168.43.111/NODO%20A">NODO A</a>
+				<a href="http://192.168.43.111/NODO%20B">NODO B</a>
+  				<a href="http://192.168.43.111/CONTACTO">Contacto</a>
 			</div>
-        </body>
-    </html>
-	""" % httpClient.GetIPAddr()
+			<div class="main">
+				<h2>MUESTRAS DE NODO A</h2>
+				<p>GRAFICA DE CAUDAL</p>
+  				<p>GRAFICA DE CORRIENTE</p>
+				<p>GRAFICA DE VOLTAJE SOLAR</p>
+			</div>    
+
+		</body>
+	</html>
+	"""
 	httpResponse.WriteResponseOk( headers		 = None,
 								  contentType	 = "text/html",
 								  contentCharset = "UTF-8",
-								  content 		 = content )
-@MicroWebSrv.route('/NODOA')
-def _httpHandlerTestGet(httpClient, httpResponse) :
-	content = """\
+								  content 		 = content )			
+
+@MicroWebSrv.route('/NODO B')
+def _httpHandlerTestGet3(httpClient, httpResponse):
+	print(httpClient)
+	content= """\
 	<!DOCTYPE html>
-	<html lang=en>
-        <head>
-			<link rel="stylesheet" href="style.css">
-        	<meta charset="UTF-8" />
-            <title>Proyecto TIC'S 2018 SEGUNDO SEMESTRE</title>
-        </head>
-        <body>
-            <h2>MODULO NODO A</h2>
-			<div id="navbar">
-				<a href="#SERVIDOR">SERVIDOR</a>
-				<a href="#NODO A">NODO A</a>
-				<a href="#NODO B">NODO B</a>
+	<html>
+		<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style2.css">
+		</head>
+		<body>
+			<div class="sidenav">
+				<a href="http://192.168.43.111/INDEX">PROGRAMAS</a>
+				<a href="http://192.168.43.111/NODO%20A">NODO A</a>
+				<a href="http://192.168.43.111/NODO%20B">NODO B</a>
+  				<a href="http://192.168.43.111/CONTACTO">Contacto</a>
 			</div>
-        </body>
-    </html>
-	""" % httpClient.GetIPAddr()
+			<div class="main">
+				<h2>MUESTRAS DE NODO B</h2>
+				<p>GRAFICA DE CAUDAL</p>
+  				<p>GRAFICA DE CORRIENTE</p>
+				<p>GRAFICA DE VOLTAJE SOLAR</p>
+			</div>    
+
+		</body>
+	</html>
+	"""
 	httpResponse.WriteResponseOk( headers		 = None,
 								  contentType	 = "text/html",
 								  contentCharset = "UTF-8",
 								  content 		 = content )
 
-@MicroWebSrv.route('/test', 'POST')
+@MicroWebSrv.route('/CONTACTO')
+def _httpHandlerTestGet4(httpClient, httpResponse):
+	print(httpClient)
+	content= """\
+	<!DOCTYPE html>
+	<html>
+		<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style2.css">
+		</head>
+		<body>
+			<div class="sidenav">
+				<a href="http://192.168.43.111/INDEX">PROGRAMAS</a>
+				<a href="http://192.168.43.111/NODO%20A">NODO A</a>
+				<a href="http://192.168.43.111/NODO%20B">NODO B</a>
+  				<a href="http://192.168.43.111/CONTACTO">Contacto</a>
+			</div>
+			<div class="main">
+				<h2>CONTACTO</h2>
+				<p>ALONSO GAJARDO</p>
+  				<p>MAIL: ALONSO.GAJARDO@MAIL.UDP.CL</p>
+				<p>TEL: 988992732</p>
+			</div>    
+
+		</body>
+	</html>
+	"""
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = content )
+
+@MicroWebSrv.route('/INDEX', 'POST')
 def _httpHandlerTestPost(httpClient, httpResponse) :
 	formData  = httpClient.ReadRequestPostedFormData()
 	print("/test/post de data con: ", formData)
-	firstname = formData["firstname"]
-	lastname  = formData["lastname"]
+	flujo = formData["FLUJO"]
+	corriente  = formData["CORRIENTE"]
 	content   = """\
 	<!DOCTYPE html>
 	<html lang=en>
@@ -102,12 +155,12 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
         </head>
         <body>
             <h1>TEST POST</h1>
-            Firstname = %s<br />
-            Lastname = %s<br />
+            Flujo = %s<br />
+            Corriente = %s<br />
         </body>
     </html>
-	""" % ( MicroWebSrv.HTMLEscape(firstname),
-		    MicroWebSrv.HTMLEscape(lastname) )
+	""" % ( MicroWebSrv.HTMLEscape(flujo),
+		    MicroWebSrv.HTMLEscape(corriente) )
 
 	httpResponse.WriteResponseOk( headers		 = None,
 								  contentType	 = "text/html",
@@ -115,36 +168,6 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
 								  content 		 = content )
 
 
-@MicroWebSrv.route('/edit/<index>')             # <IP>/edit/123           ->   args['index']=123
-@MicroWebSrv.route('/edit/<index>/abc/<foo>')   # <IP>/edit/123/abc/bar   ->   args['index']=123  args['foo']='bar'
-@MicroWebSrv.route('/edit')                     # <IP>/edit               ->   args={}
-def _httpHandlerEditWithArgs(httpClient, httpResponse, args={}) :
-	content = """\
-	<!DOCTYPE html>
-	<html lang=en>
-        <head>
-        	<meta charset="UTF-8" />
-            <title>TEST EDIT</title>
-        </head>
-        <body>
-	"""
-	content += "<h1>EDIT item with {} variable arguments</h1>"\
-		.format(len(args))
-	
-	if 'index' in args :
-		content += "<p>index = {}</p>".format(args['index'])
-	
-	if 'foo' in args :
-		content += "<p>foo = {}</p>".format(args['foo'])
-	
-	content += """
-        </body>
-    </html>
-	"""
-	httpResponse.WriteResponseOk( headers		 = None,
-								  contentType	 = "text/html",
-								  contentCharset = "UTF-8",
-								  content 		 = content )
 
 # ----------------------------------------------------------------------------
 
@@ -167,10 +190,13 @@ def _closedCallback(webSocket) :
 # ----------------------------------------------------------------------------
 
 routeHandlers = [
-	( "/test",	"GET",	_httpHandlerTestGet ),
-	( "/test",	"POST",	_httpHandlerTestPost )
+	( "/INDEX",	"GET",	_httpHandlerTestGet ),
+	( "/INDEX",	"POST",	_httpHandlerTestPost ),
+	( "/NODO%20A",	"GET",	_httpHandlerTestGet2 ),
+	( "/NODO%20B",	"GET",	_httpHandlerTestGet3 ),
+	( "/CONTACTO",	"GET",	_httpHandlerTestGet4 )
 ]
-do_connect("iPhone de Benjamin","arduinoUno")
+do_connect("Invitado","1a2s3d4f5")
 print("Conexion ok, servidor apunto de iniciar")
 srv = MicroWebSrv()
 srv.MaxWebSocketRecvLen     = 256
@@ -178,4 +204,3 @@ srv.WebSocketThreaded		= False
 srv.AcceptWebSocketCallback = _acceptWebSocketCallback
 srv.Start(threaded=False)
 
-# ----------------------------------------------------------------------------
