@@ -28,7 +28,7 @@ def _httpHandlerTestGet(httpClient, httpResponse):
 			<div class="main">
 				<h2>CONFIGURACION DE PROGRAMAS DE RIEGO</h2>
 				<p>PROGRAMA ACTUAL DE RIEGO: </p>
-  				<p>data</p>
+  				<p>data</p>%s
 				<form action="/INDEX" method="post" accept-charset="ISO-8859-1">
 					SENSOR A: <input type="text" name="FLUJO"><br />
 					SENSOR B: <input type="text" name="CORRIENTE"><br />
@@ -38,7 +38,7 @@ def _httpHandlerTestGet(httpClient, httpResponse):
 
 		</body>
 	</html>
-	"""
+	"""%programa
 	httpResponse.WriteResponseOk( headers		 = None,
 								  contentType	 = "text/html",
 								  contentCharset = "UTF-8",
@@ -143,6 +143,7 @@ def _httpHandlerTestGet4(httpClient, httpResponse):
 @MicroWebSrv.route('/INDEX', 'POST')
 def _httpHandlerTestPost(httpClient, httpResponse) :
 	formData  = httpClient.ReadRequestPostedFormData()
+	print(httpResponse)
 	print("/test/post de data con: ", formData)
 	flujo = formData["FLUJO"]
 	corriente  = formData["CORRIENTE"]
@@ -169,6 +170,56 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
 
 
 
+@MicroWebSrv.route('/NODOASSFLUJO', 'POST')
+def _httpHandlerTestPostA(httpClient, httpResponse) :
+	status_riego=False
+	formData  = httpClient.ReadRequestPostedFormData()
+	print("/NODOASSFLUJO/POST: ", formData)
+	flujo = formData["FLUJO"]
+	secuencia  = formData["SECUENCIA"]
+	content   = """\
+	<!DOCTYPE html>
+	<html>
+		<body>
+			<h1>
+			DATA RECIBIDO OK DE NODO A
+			ESTADO DE RIEGO: %s
+			</h1>
+		</body>
+		
+    </html>
+	""" %status_riego
+
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = content )
+
+@MicroWebSrv.route('/NODOASSCORRIENTE', 'POST')
+def _httpHandlerTestPostA2(httpClient, httpResponse) :
+	status_riego=False
+	formData  = httpClient.ReadRequestPostedFormData()
+	print("/NODOASSCORRIENTE/POST: ", formData)
+	corriente = formData["CORRIENTE"]
+	secuencia  = formData["SECUENCIA"]
+	content   = """\
+	<!DOCTYPE html>
+	<html>
+		<body>
+			<h1>
+			DATA RECIBIDO OK DE NODO B
+			ESTADO DE RIEGO: %s
+			</h1>
+		</body>
+		
+    </html>
+	""" %status_riego
+
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = content )
+
 # ----------------------------------------------------------------------------
 
 def _acceptWebSocketCallback(webSocket, httpClient) :
@@ -194,7 +245,10 @@ routeHandlers = [
 	( "/INDEX",	"POST",	_httpHandlerTestPost ),
 	( "/NODO%20A",	"GET",	_httpHandlerTestGet2 ),
 	( "/NODO%20B",	"GET",	_httpHandlerTestGet3 ),
-	( "/CONTACTO",	"GET",	_httpHandlerTestGet4 )
+	( "/CONTACTO",	"GET",	_httpHandlerTestGet4 ),
+	( "/NODOASSFLUJO",	"POST",	_httpHandlerTestPostA2 ),
+	( "/NODOASSCORRIENTE",	"POST",	_httpHandlerTestPostA2 )
+
 ]
 do_connect("Invitado","1a2s3d4f5")
 print("Conexion ok, servidor apunto de iniciar")
@@ -204,3 +258,4 @@ srv.WebSocketThreaded		= False
 srv.AcceptWebSocketCallback = _acceptWebSocketCallback
 srv.Start(threaded=False)
 
+i

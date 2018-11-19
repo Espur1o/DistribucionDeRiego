@@ -239,7 +239,7 @@ class MicroWebSrv :
                                      socket.SO_REUSEADDR,
                                      1 )
             self._server.bind(self._srvAddr)
-            self._server.listen(1)
+            self._server.listen(5)
             if threaded :
                 MicroWebSrv._tryStartThread(self._serverProcess)
             else :
@@ -274,6 +274,7 @@ class MicroWebSrv :
     
     def GetRouteHandler(self, resUrl, method) :
         if self._routeHandlers :
+            print(resUrl)
             #resUrl = resUrl.upper()
             if resUrl.endswith('/') :
                 resUrl = resUrl[:-1]
@@ -319,7 +320,7 @@ class MicroWebSrv :
         # ------------------------------------------------------------------------
 
         def __init__(self, microWebSrv, socket, addr) :
-            socket.settimeout(2)
+            socket.settimeout(2)# b BUSCA QUE ES SETTIMEOUT...
             self._microWebSrv   = microWebSrv
             self._socket        = socket
             self._addr          = addr
@@ -332,7 +333,7 @@ class MicroWebSrv :
             self._headers       = { }
             self._contentType   = None
             self._contentLength = 0
-            
+            print(addr)
             if hasattr(socket, 'readline'):   # MicroPython
                 self._socketfile = self._socket
             else:   # CPython
@@ -345,19 +346,23 @@ class MicroWebSrv :
         def _processRequest(self) :
             try :
                 response = MicroWebSrv._response(self)
-                if self._parseFirstLine(response) :
-                    if self._parseHeader(response) :
+                if self._parseFirstLine(response) : # retorna true ssi puede descomponer correctamente la solicitud del cliente.
+                    if self._parseHeader(response) : # retornara true ssi la solicitud del cliente contiene un get o un post
                         upg = self._getConnUpgrade()
+                        #UPG PUEDE SER NONE O OTRA COSA.....
+                        print('UPG:   ', upg)
                         if not upg :
-                            routeHandler, routeArgs = self._microWebSrv.GetRouteHandler(self._resPath, self._method)
-                            if routeHandler :
+                            # SOLAMENTE SI UPG ES NONE
+                            routeHandler, routeArgs = self._microWebSrv.GetRouteHandler(self._resPath, self._method) # DEVUELVE LA RUTA DEL METODO SOLICITADO
+                            print(routeHandler, routeArgs)
+                            if routeHandler:# SI, SOLO SI ROUTEHANDLER NO ES NONE SI LO FUERA
                                 if routeArgs is not None:
                                     routeHandler(self, response, routeArgs)
                                 else:
                                     routeHandler(self, response)
-                            elif self._method.upper() == "GET" :
+                            elif self._method.upper() == "GET" : 
                                 filepath = self._microWebSrv._physPathFromURLPath(self._resPath)
-                                if filepath :
+                                if filepath : # no none
                                     if MicroWebSrv._isPyHTMLFile(filepath) :
                                         response.WriteResponsePyHTMLFile(filepath)
                                     else :
@@ -376,9 +381,12 @@ class MicroWebSrv :
                                 else :
                                     response.WriteResponseNotFound()
                             else :
+                                #ERROR DE NO TENER LA RUTA
                                 response.WriteResponseMethodNotAllowed()
                         elif upg == 'websocket' and 'MicroWebSocket' in globals() \
-                             and self._microWebSrv.AcceptWebSocketCallback :
+                             and self._microWebSrv.AcceptWebSocketCallback :## NO ESTA CONFIGURADO EN GLOBALS EL MICROWEBSOCKET POR TANTO 
+                             ##NUNCA ENTRARA EN ESTA CONDICION! QUE SIGNIFICA QUE UPG==WEBSOCKET??? :X
+                                print('se crea un nuevo socket solamente desde microwebsocket!')
                                 MicroWebSocket( socket         = self._socket,
                                                 httpClient     = self,
                                                 httpResponse   = response,
@@ -400,20 +408,22 @@ class MicroWebSrv :
                 pass
 
         # ------------------------------------------------------------------------
-
+        # DECODIFICA LA SOLICITUD Y RETORNA TRUE SI ESTA BIEN ESCRITA...
         def _parseFirstLine(self, response) :
             try :
-                elements = self._socketfile.readline().decode().strip().split()
+                elements = self._socketfile.readline().decode().strip().split()##LECTURA DE LA RESPUESTA DE UN CLIENTE
+                print('_PARSEFIRSTLINE RESPONDE CON ELEMENT IGUAL A: ',elements)
                 if len(elements) == 3 :
-                    self._method  = elements[0].upper()
-                    self._path    = elements[1]
+                    self._method  = elements[0].upper()## METODO POST, GET, PUT... upper() es poner mayusculas!!!
+                    self._path    = elements[1]## DESTINO URL
                     self._httpVer = elements[2].upper()
                     elements      = self._path.split('?', 1)
-                    if len(elements) > 0 :
+                    print('METODO : ', self._method, ' PATH: ',self_path, ' VERSION: ', self._httpVer, ' RESTO: ',elements)
+                    if len(elements) > 0 : ##elemens se cambia en la linea anterior! si no contiene nada el path se de
                         self._resPath = MicroWebSrv._unquote_decode(elements[0])
                         if len(elements) > 1 :
                             self._queryString = elements[1]
-                            elements = self._queryString.split('&')
+                            elements = self._queryString.split('&') ## SEPARADOR DE LLAVES CONDICIONALES!
                             for s in elements :
                                 param = s.split('=', 1)
                                 if len(param) > 0 :
@@ -428,11 +438,16 @@ class MicroWebSrv :
 
         def _parseHeader(self, response) :
             while True :
-                elements = self._socketfile.readline().decode().strip().split(':', 1)
-                if len(elements) == 2 :
-                    self._headers[elements[0].strip().lower()] = elements[1].strip()
-                elif len(elements) == 1 and len(elements[0]) == 0 :
+                elements = self._socketfile.readline().decode().strip().split(':', 1)## OTRA FORMA DE VER LA RESPUESTA DEL CLIENTE
+                print('CILCO TRUE DE _PARSEHEADER Y LA LONGITUD DEL ELEMENTS ES: ', len(elements))
+                if len(elements) == 2 : # SOLAMENTE SE AGREGARA ELEMTOS A SELF_HEADERS SI LA LONGITUD DE LA CADENA ELEMTENTS ES 2!
+                    self._headers[elements[0].strip().lower()] = elements[1].strip() # EL CICLO DEBE SEGUIR ITERANDO! HASTA QUE LA LONGITUD DE
+                    # ELEMENTOS NO SEA IGUAL A 2.
+                elif len(elements) == 1 and len(elements[0]) == 0 :## EN ELEMENTS [0] no sabemos que hay    
+                    print('si self_method es un valor, elements[0] no debe ser nunca 0????, que es elements en _parseheader?? ', elements)
+
                     if self._method == 'POST' or self._method == 'PUT' :
+                        #AQUI EL CODIGO SEPARA LA CONDICION DEL GET CON EL POST Y PUT...!!!! 
                         self._contentType   = self._headers.get("content-type", None)
                         self._contentLength = int(self._headers.get("content-length", 0))
                     return True
@@ -441,10 +456,10 @@ class MicroWebSrv :
 
         # ------------------------------------------------------------------------
 
-        def _getConnUpgrade(self) :
+        def _getConnUpgrade(self) : ## BUSCAR QUE SIGNIFICA QUE EL MENSAJE DEL CLIENTE EN CONNECTION CONTENGA UN UPGRADE
             if 'upgrade' in self._headers.get('connection', '').lower() :
                 return self._headers.get('upgrade', '').lower()
-            return None
+            return None ## OJO QUE SOLAMENTE SI CONNECTION CONTIENE UPGRADE SE DEBERA DEVOLVER UN VALOR QUE NO ES NONE
 
         # ------------------------------------------------------------------------
 
@@ -522,7 +537,7 @@ class MicroWebSrv :
             return b if b else b''
 
         # ------------------------------------------------------------------------
-
+ 
         def ReadRequestPostedFormData(self) :
             res  = { }
             data = self.ReadRequestContent()
