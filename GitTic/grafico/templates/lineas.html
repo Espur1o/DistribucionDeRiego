@@ -1,0 +1,32 @@
+<!-- HTML que contiene los graficos -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="../libs/morris.css"> 
+    <script src="../libs/morris.min.js" charset="utf-8"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <title>Gráfica Nodo</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Gráfico de programa de riego</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Gráfica de línea</h2>
+                <hr>
+                <div id="graficas de lineas"></div>
+            </div>
+        </div>
+        <button type="button" id="botData" class="btn btn-primary"> CARGAR DATOS!</button>
+        <input type="button" value="INICIO" onclick="location.href='http://localhost:3000/'"> 
+    </div>
+    <!-- aquí importamos lienas.js que es donde se maneja la graficas, lo demas es solo estilo del html -->
+    <script src="lineas.js" charset="utf-8"></script>
+</body>
+</html>
